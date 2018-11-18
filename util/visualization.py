@@ -3,7 +3,7 @@ Data structure visualizer.
 """
 
 import jgraph
-import serializer
+import util.serializer as serializer
 
 def draw_garph_3d(node):
     nodes = serializer.graph_to_nodes_set(node)

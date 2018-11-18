@@ -20,8 +20,12 @@ class GraphNodeUniDirection:
         return self._uuid
 
     @property
+    def content(self):
+        return self._content
+
+    @property
     def neighbors(self):
-        return list(self._adjacent.keys())
+        return set(self._adjacent.keys())
 
     @property
     def edge_weights(self):
