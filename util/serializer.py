@@ -9,7 +9,7 @@ def graph_to_nodes_set(node):
         cur = stack.pop()
         if cur not in res:
             res.add(cur)
-        neighbors = node.neighbors
+        neighbors = cur.neighbors
         for neighbor in neighbors:
             if neighbor not in res:
                 stack.append(neighbor)
