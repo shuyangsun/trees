@@ -51,6 +51,7 @@ class BinaryTreeNode(TreeNode):
         if node is None:
             self.remove_child(self._left)
         else:
+            self.left = None
             self.add_child(node)
         self._left = node
     
@@ -63,6 +64,7 @@ class BinaryTreeNode(TreeNode):
         if node is None:
             self.remove_child(self._right)
         else:
+            self.right = None
             self.add_child(node)
         self._right = node
     
