@@ -18,7 +18,6 @@ def draw_garph_3d(node):
             edges.append((str(node.uuid), str(neighbor.uuid)))
     jgraph.draw(edges)
 
-#
 
 def draw_binary_tree(
         root,
