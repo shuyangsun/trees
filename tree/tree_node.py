@@ -25,6 +25,10 @@ class TreeNode(GraphNodeBiDirection):
                 return neighbor
         return None
 
+    @property
+    def is_leaf(self):
+        return not self.children
+
     def add_child(self, child):
         if self.is_neighbor(child):
             raise ValueError('Child already exist.')
@@ -67,4 +71,12 @@ class BinaryTreeNode(TreeNode):
             self.right = None
             self.add_child(node)
         self._right = node
+
+    @property
+    def has_left(self):
+        return self.left is not None
+
+    @property
+    def has_right(self):
+        return self.right is not None
     
