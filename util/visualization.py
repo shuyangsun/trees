@@ -10,13 +10,22 @@ import util.serializer as serializer
 from plotly.offline import iplot, init_notebook_mode
 
 
+# ------------------------------------------------------- Graph --------------------------------------------------------
+
+
 def draw_garph_3d(node):
+    """
+    Draw uni-directional or bi-directional graph in 3D space.
+    """
     nodes = serializer.graph_to_nodes_set(node)
     edges = []
     for node in nodes:
         for neighbor in node.neighbors:
             edges.append((str(node.uuid), str(neighbor.uuid)))
     jgraph.draw(edges)
+
+
+# ---------------------------------------------------- Binary Tree -----------------------------------------------------
 
 
 def draw_binary_tree(
@@ -35,7 +44,7 @@ def draw_binary_tree(
     nodes_lst_no_none = [ele for ele in nodes_lst if ele is not None]
     labels = [node_label_format_func(ele) for ele in nodes_lst_no_none]
     labels_dict = {ele: node_label_format_func(ele) for ele in nodes_lst_no_none}
-    tree_height = int(math.log2(len(nodes_lst) + 1) - 1)
+    tree_height = root.height
     x_pos = __create_x_pos_btree(sibling_spacing, tree_height)
     y_pos = __create_y_pos_btree(single_depth_height, tree_height)
     x_pos = [ele for idx, ele in enumerate(x_pos) if nodes_lst[idx] is not None]
@@ -43,19 +52,18 @@ def draw_binary_tree(
     position = {ele: (x_pos[idx], y_pos[idx]) for idx, ele in enumerate(nodes_lst_no_none)}
     E = __create_edges_btree(root)
 
-    Xn = [x_pos[idx] for idx, ele in enumerate(nodes_lst_no_none)]
-    Yn = [y_pos[idx] for idx, ele in enumerate(nodes_lst_no_none)]
-    Xe = []
-    Ye = []
+    xn = [x_pos[idx] for idx, ele in enumerate(nodes_lst_no_none)]
+    yn = [y_pos[idx] for idx, ele in enumerate(nodes_lst_no_none)]
+    xe, ye = [], []
     for edge in E:
-        Xe += [position[edge[0]][0], position[edge[1]][0], None]
-        Ye += [position[edge[0]][1], position[edge[1]][1], None]
+        xe += [position[edge[0]][0], position[edge[1]][0], None]
+        ye += [position[edge[0]][1], position[edge[1]][1], None]
 
     lines = go.Scatter(
-        x=Xe, y=Ye, mode='lines', line=dict(color=line_color, width=1), hoverinfo='none'
+        x=xe, y=ye, mode='lines', line=dict(color=line_color, width=1), hoverinfo='none'
     )
     dots = go.Scatter(
-        x=Xn, y=Yn, mode='markers', name='',
+        x=xn, y=yn, mode='markers', name='',
         marker=dict(
             symbol='circle', size=18, color=node_color, line=dict(color='rgb(50,50,50)', width=1)
         ),
@@ -73,6 +81,9 @@ def draw_binary_tree(
     fig = dict(data=[lines, dots], layout=layout)
     fig['layout'].update(annotations=__make_annotations(position, labels_dict))
     iplot(fig, filename='binary_tree_plot')
+
+
+# ------------------------------------------------------ Helper --------------------------------------------------------
 
 
 def __create_x_pos_btree(space, tree_height):
@@ -112,6 +123,7 @@ def __create_edges_btree(root):
             s.append(cur.right)
     return res
 
+
 def __make_annotations(pos, text, font_size=10, font_color='rgb(250,250,250)'):
     if len(text) != len(pos):
         raise ValueError('The lists pos and text must have the same length.')
@@ -127,3 +139,4 @@ def __make_annotations(pos, text, font_size=10, font_color='rgb(250,250,250)'):
             showarrow=False
         ))
     return annotations
+

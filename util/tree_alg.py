@@ -28,21 +28,3 @@ def insert_bst(root, node, cmp_lt=lambda lhs, rhs: lhs.content < rhs.content, cm
                 return
         else:
             return
-
-
-def get_height(root):
-    res = -1
-    if root is None:
-        return res
-    q = deque([root])
-    while q:
-        res += 1
-        cur = []
-        while q:
-            cur.append(q.popleft())
-        for node in cur:
-            if node.has_left:
-                q.append(node.left)
-            if node.has_right:
-                q.append(node.right)
-    return res
