@@ -51,6 +51,8 @@ class GraphNodeUniDirection:
         return self.uuid.__hash__()
 
     def __eq__(self, rhs):
+        if rhs is None or not isinstance(rhs, GraphNodeUniDirection):
+            return False
         return self.uuid == rhs.uuid
 
 

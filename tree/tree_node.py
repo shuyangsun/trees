@@ -12,11 +12,11 @@ class TreeNode(GraphNodeBiDirection):
 
     @property
     def children(self):
-        neighbors = self.neighbors
-        for neighbor in neighbors:
+        res = self.neighbors
+        for neighbor in self.neighbors:
             if self.get_weight(neighbor) == -1:
-                neighbors.remove(neighbor)
-        return neighbors
+                res.remove(neighbor)
+        return res
 
     @property
     def parent(self):
@@ -27,6 +27,10 @@ class TreeNode(GraphNodeBiDirection):
         return None
 
     @property
+    def has_parent(self):
+        return self.parent is not None
+
+    @property
     def is_leaf(self):
         return not self.children
     
@@ -35,29 +39,37 @@ class TreeNode(GraphNodeBiDirection):
         return self._height
 
     def add_child(self, child):
-        if self.is_neighbor(child):
+        if child == self.parent:
+            raise ValueError('Cannot add parent as child.')
+        if child in self.children:
             raise ValueError('Child already exist.')
         self.add_neighbor_bidirection(child, edge_weight_out=1, edge_weight_in=-1)
         new_height = max(self._height, child.height + 1)
         if new_height != self._height:
-            self._update_height(new_height)
+            self._update_height_max(new_height)
 
     def remove_child(self, child):
         if not self.is_neighbor(child):
             return
-        self.remove_neighbor_unidirection(child)
-        new_height = 0
-        for node in self.children:
-            new_height = max(new_height, node.height + 1)
-        if new_height != self._height:
-            self._update_height(new_height)
+        self.remove_neighbor_bidirection(child)
+        self._update_height()
 
-    def _update_height(self, new_height):
+    def _update_height(self):
+        cur = self
+        while cur is not None:
+            new_height = 0
+            for node in cur.children:
+                new_height = max(new_height, node.height + 1)
+            cur._height = new_height
+            cur = cur.parent
+
+    def _update_height_max(self, new_height):
         cur = self
         while cur is not None:
             cur._height = max(cur.height, new_height)
             cur = cur.parent
             new_height += 1
+
 
 class BinaryTreeNode(TreeNode):
     def __init__(self, content=None):
@@ -73,6 +85,7 @@ class BinaryTreeNode(TreeNode):
     def left(self, node):
         if node is None:
             self.remove_child(self._left)
+            self._left = None
         else:
             self.left = None
             self.add_child(node)
@@ -86,6 +99,7 @@ class BinaryTreeNode(TreeNode):
     def right(self, node):
         if node is None:
             self.remove_child(self._right)
+            self._right = None
         else:
             self.right = None
             self.add_child(node)
