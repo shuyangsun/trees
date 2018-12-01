@@ -2,6 +2,8 @@
 Serialize datastructure.
 """
 
+from tree.tree_node import BinaryTreeNode
+
 def graph_to_nodes_set(node):
     res = set()
     stack = [node]
@@ -18,6 +20,7 @@ def graph_to_nodes_set(node):
 
 def binary_tree_to_arr(root):
     res = []
+    s = []
     def __tree2arr(node, depth, path, res):
         if node is None:
             return
@@ -32,3 +35,21 @@ def binary_tree_to_arr(root):
 
     __tree2arr(root, 0, 0, res)
     return res
+
+
+def arr_to_binary_tree(self, arr):
+        if not arr:
+            return None
+        root = BinaryTreeNode(arr[0])
+        s = [(root, 0)]
+        while s:
+            cur, idx = s.pop()
+            left = 2 * idx + 1
+            right = 2 * idx + 2            
+            if left < len(arr) and arr[left]:
+                cur.left = BinaryTreeNode(arr[left])
+                s.append((cur.left, left))
+            if right < len(arr) and arr[right]:
+                cur.right = BinaryTreeNode(arr[right])
+                s.append((cur.right, right))
+        return root
