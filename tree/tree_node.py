@@ -33,7 +33,7 @@ class TreeNode(GraphNodeBiDirection):
     @property
     def is_leaf(self):
         return not self.children
-    
+
     @property
     def height(self):
         return self._height
